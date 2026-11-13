@@ -1,0 +1,91 @@
+{
+	//--------------------------------------------------
+	// ROS2 CmakeLists.txt
+	//--------------------------------------------------
+
+	"ROS2 Add Executable": {
+		"prefix": "ros2_add_executable",
+		"body": [
+			"add_executable(${1:/* exec_name */} ${2:/* file_name */})",
+			"target_include_directories(${1:/* exec_name} PRIVATE include)",
+			"ament_target_dependencies(${1:/* exec_name} ${3:/* dep_name */})$0",
+		],
+		"description": "ROS2 code snippet for add executable"
+	},
+
+	"ROS2 Add Library": {
+		"prefix": "ros2_add_library",
+		"body": [
+			"add_library(${1:/* lib_name */} ${2:/* file_name */})",
+			"target_include_directories(${1:/* lib_name */} PRIVATE include)",
+			"ament_target_dependencies(${1:/* lib_name */} ${3:/* dep_name */})$0",
+		],
+		"description": "ROS2 code snippet for add library"
+	},
+
+	"ROS2 Install Executable": {
+		"prefix": "ros2_install_executable",
+		"body": [
+			"install(TARGETS ${1:/* exec_name */}",
+			"\tDESTINATION lib/${${PROJECT_NAME}}",
+			")$0",
+		],
+		"description": "ROS2 code snippet for install executable"
+	},
+
+	"ROS2 Install Library": {
+		"prefix": "ros2_install_library",
+		"body": [
+			"install(TARGETS ${1:/* lib_name */}",
+			"\tARCHIVE DESTINATION lib",
+			"\tLIBRARY DESTINATION lib",
+			"\tRUNTIME DESTINATION bin",
+			")$0",
+		],
+		"description": "ROS2 code snippet for install library"
+	},
+
+	"ROS2 Install Share": {
+		"prefix": "ros2_install_share",
+		"body": [
+			"install(DIRECTORY ${1:/* dir_name */}",
+			"\tDESTINATION share/${${PROJECT_NAME}}",
+			")$0",
+		],
+		"description": "ROS2 code snippet for install share"
+	},
+
+	"ROS2 Install Include": {
+		"prefix": "ros2_install_include",
+		"body": [
+			"install(DIRECTORY include/",
+			"\tDESTINATION include",
+			")$0",
+		],
+		"description": "ROS2 code snippet for install include"
+	},
+
+  "ROS2 Export Include": {
+		"prefix": "ros2_export_include",
+		"body": [
+      "ament_export_include_directories(include)$0",
+		],
+		"description": "ROS2 code snippet for export include"
+	},
+
+  "ROS2 Export Library": {
+		"prefix": "ros2_export_library",
+		"body": [
+      "ament_export_libraries(${1:/* lib_name */})$0",
+		],
+		"description": "ROS2 code snippet for export library"
+	},
+
+  "ROS2 Export Dependency": {
+		"prefix": "ros2_export_dependency",
+		"body": [
+      "ament_export_dependencies(${1:/* dep_name */})$0",
+		],
+		"description": "ROS2 code snippet for export dependency"
+	},
+}

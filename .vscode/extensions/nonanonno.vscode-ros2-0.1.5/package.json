@@ -1,0 +1,104 @@
+{
+	"name": "vscode-ros2",
+	"displayName": "ROS2",
+	"description": "Robot Operation System 2 (ROS2)",
+	"version": "0.1.5",
+	"publisher": "nonanonno",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nonanonno/vscode-ros2"
+	},
+	"icon": "assets/icon.png",
+	"license": "MIT",
+	"engines": {
+		"vscode": "^1.55.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"keywords": [
+		"ros2"
+	],
+	"activationEvents": [
+		"onLanguage:ros2.interface"
+	],
+	"main": "./client/out/extension",
+	"contributes": {
+		"configuration": {
+			"title": "ROS2",
+			"properties": {
+				"ros2.rosRootDir": {
+					"scope": "resource",
+					"type": "string",
+					"default": "",
+					"description": "Path to ROS2 installation directory. If empty, default path of rolling, galactic or foxy will be selected."
+				},
+				"ros2.additionalSearchDirs": {
+					"scope": "resource",
+					"type": "array",
+					"default": [],
+					"description": "Additional search directories for ros2 interface"
+				},
+				"ros2.skipColconIgnore": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Skip COLCON_IGNORE when searching."
+				}
+			}
+		},
+		"languages": [
+			{
+				"id": "ros2.interface",
+				"aliases": [
+					"ROS Interface",
+					"interface"
+				],
+				"extensions": [
+					".action",
+					".msg",
+					".srv"
+				],
+				"configuration": "./lang-config/ros2.interface.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "ros2.interface",
+				"scopeName": "source.ros2.interface",
+				"path": "./lang-config/syntaxes/ros2.interface.json"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -b",
+		"watch": "tsc -b -w",
+		"lint": "eslint server client --ext ts",
+		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./client/out/test/runTest.js",
+		"posttest": "cd server && npm test && cd ../",
+		"clean": "rm -rf node_modules && cd client && npm run clean && cd ../server npm run clean && cd .."
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.4",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "^15.12.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/parser": "^4.26.0",
+		"eslint": "^7.27.0",
+		"mocha": "^8.4.0",
+		"typescript": "^3.9.9"
+	},
+	"__metadata": {
+		"id": "a243dbe2-060a-42e0-84a2-e2d177fa174b",
+		"publisherId": "e4f2ac65-00d3-40b2-87de-a01dc6dce85d",
+		"publisherDisplayName": "nonanonno",
+		"targetPlatform": "undefined",
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"installedTimestamp": 1794580834297,
+		"preRelease": false
+	}
+}

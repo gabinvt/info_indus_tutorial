@@ -1,0 +1,252 @@
+{
+    "name": "ament-task-provider",
+    "displayName": "ROS 2 Ament Task Provider",
+    "description": "Provides tasks and problem matchers for ROS2 projects using ament",
+    "version": "0.4.2",
+    "author": {
+        "name": "Allison Thackston",
+        "email": "allison@allisonthackston.com"
+    },
+    "publisher": "althack",
+    "license": "SEE LICENSE IN LICENSE",
+    "homepage": "https://althack.dev/vscode-ament-task-provider",
+    "bugs": {
+        "url": "https://github.com/althack/vscode-ament-task-provider/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/althack/vscode-ament-task-provider.git"
+    },
+    "engines": {
+        "vscode": "^1.61.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "keywords": [
+        "ros2",
+        "ament",
+        "problem matcher",
+        "tasks"
+    ],
+    "galleryBanner": {
+        "color": "#5953B3",
+        "theme": "dark"
+    },
+    "icon": "leaf.png",
+    "activationEvents": [
+        "onCommand:workbench.action.tasks.runTask",
+        "onCommand:ament-task-provider.changeSetting"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "configuration": {
+            "title": "Ament Task Provider",
+            "properties": {
+                "ament-task-provider.envSetup": {
+                    "type": "string",
+                    "default": "",
+                    "markdownDescription": "The command to setup the environment for ament tasks.\n\n*Example: source /opt/ros/humble/setup.bash*"
+                }
+            }
+        },
+        "taskDefinitions": [
+            {
+                "type": "ament",
+                "required": [
+                    "task"
+                ],
+                "properties": {
+                    "task": {
+                        "type": "string",
+                        "description": "The ament linter",
+                        "examples": [
+                            "cpplint",
+                            "cppcheck",
+                            "lint_cmake",
+                            "flake8",
+                            "mypy",
+                            "pep257",
+                            "xmllint"
+                        ]
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "(Optional) The path to lint."
+                    },
+                    "commandOptions": {
+                        "type": "string",
+                        "description": "(Optional) command line arguments for the linter."
+                    },
+                    "envSetup": {
+                        "type": "string",
+                        "description": "(Optional) The env setup script to use for ament tasks"
+                    }
+                }
+            }
+        ],
+        "problemMatchers": [
+            {
+                "name": "ament_cpplint",
+                "label": "Ament cpplint problem matcher",
+                "owner": "ament_cpplint",
+                "source": "ament_cpplint",
+                "applyTo": "allDocuments",
+                "fileLocation": "absolute",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^(.+):(\\d+):\\s+(.+)\\[(.+)\\]$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3,
+                        "code": 4
+                    }
+                ]
+            },
+            {
+                "name": "ament_cppcheck",
+                "label": "Ament cppcheck problem matcher",
+                "owner": "ament_cppcheck",
+                "source": "ament_cppcheck",
+                "applyTo": "allDocuments",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^\\[(.+):(\\d+)\\]:\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                ]
+            },
+            {
+                "name": "ament_lint_cmake",
+                "label": "Ament lint cmake problem matcher",
+                "owner": "ament_lint_cmake",
+                "source": "ament_lint_cmake",
+                "applyTo": "allDocuments",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^(.+):(\\d+):\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                ]
+            },
+            {
+                "name": "ament_flake8",
+                "label": "Ament flake8 problem matcher",
+                "owner": "ament_flake8",
+                "source": "ament_flake8",
+                "applyTo": "allDocuments",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^(.+):(\\d+):(\\d+): (\\w\\d+) (.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "code": 4,
+                        "message": 5
+                    }
+                ]
+            },
+            {
+                "name": "ament_mypy",
+                "label": "Ament mypy problem matcher",
+                "owner": "ament_mypy",
+                "source": "ament_mypy",
+                "applyTo": "allDocuments",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^(.+):(\\d+):(\\d+):\\s(\\w+):\\s(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "code": 4,
+                        "message": 5
+                    }
+                ]
+            },
+            {
+                "name": "ament_pep257",
+                "label": "Ament pep257 problem matcher",
+                "owner": "ament_pep257",
+                "source": "ament_pep257",
+                "applyTo": "allDocuments",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^(.+):(\\d+)\\s+(.+):\\s+(.+):\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "code": 4,
+                        "message": 5
+                    }
+                ]
+            },
+            {
+                "name": "ament_uncrustify",
+                "label": "Ament uncrustify problem matcher",
+                "owner": "ament_uncrustify",
+                "source": "ament_uncrustify",
+                "applyTo": "allDocuments",
+                "fileLocation": "relative",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^Code style divergence in file '([^']+)':$",
+                        "message": 0,
+                        "file": 1,
+                        "kind": "file"
+                    }
+                ]
+            },
+            {
+                "name": "ament_xmllint",
+                "label": "Ament xmllint problem matcher",
+                "owner": "ament_xmllint",
+                "source": "ament_xmllint",
+                "applyTo": "allDocuments",
+                "fileLocation": "absolute",
+                "severity": "error",
+                "pattern": [
+                    {
+                        "regexp": "^(.+):(\\d+):\\s+(.+)\\s+:\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "code": 3,
+                        "message": 4
+                    }
+                ]
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -b",
+        "watch": "tsc -b -w",
+        "pack": "vsce package",
+        "fix": "prettier --config .prettierrc --loglevel warn --write \"./**/*.{ts,md,json}\"",
+        "lint": "prettier --config .prettierrc --loglevel warn --check \"./**/*.{ts,md,json}\"",
+        "pub": "vsce publish",
+        "test": "TS_NODE_FILES=true mocha -r ts-node/register -r out/tests/helpers/patternSeq tests/**/*.test.ts",
+        "update": "npm update && npm install"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.3.3",
+        "@types/mocha": "^10.0.0",
+        "@types/node": "^18.11.3",
+        "@types/vscode": "^1.61.0",
+        "@vscode/vsce": "^2.19.0",
+        "chai": "^4.3.6",
+        "mocha": "^10.1.0",
+        "prettier": "^2.8.8",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.8.4"
+    }
+}

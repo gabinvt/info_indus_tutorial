@@ -1,0 +1,528 @@
+{
+	//--------------------------------------------------
+	// ROS2 Main
+	//--------------------------------------------------
+
+	"ROS2 Main": {
+		"prefix": "ros2_main",
+		"body": [
+			"#include <memory>\n",
+			"#include \"rclcpp/rclcpp.hpp\"",
+			"#include \"${1:/* header */}\"\n",
+			"int main(int argc, char * argv[])",
+			"{",
+			"\trclcpp::init(argc, argv);",
+			"\trclcpp::spin(std::make_shared<${2:/* namespace_name::ClassName */}>());",
+			"\trclcpp::shutdown();"
+			"\treturn 0;",
+			"}\n$0"
+		],
+		"description": "ROS2 code snippet for main"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Class
+	//--------------------------------------------------
+
+	"ROS2 Class Declare": {
+		"prefix": "ros2_class_declare",
+		"body": [
+			"#ifndef ${1:/* PACKAGE_NAME */}__${2:/* FILE_NAME */}_HPP_",
+			"#define ${1:/* PACKAGE_NAME */}__${2:/* FILE_NAME */}_HPP_\n",
+			"#include \"rclcpp/rclcpp.hpp\"$0\n",
+			"namespace ${3:/* namespace_name */}",
+			"{",
+			"class ${4:/* ClassName */} : public rclcpp::Node",
+			"{",
+			"public:",
+			"\t${4:/* ClassName */}() : Node(\"${5:/* node_name */}\")",
+			"\t{\n",
+			"\t}\n",
+			"private:\n",
+			"};",
+			"}  // namespace ${3:/* namespace_name */}",
+			"#endif  // ${1:/* PACKAGE_NAME */}__${2:/* FILE_NAME */}_HPP_\n",
+		],
+		"description": "ROS2 code snippet for class declare"
+	},
+
+	"ROS2 Class Define": {
+		"prefix": "ros2_class_define",
+		"body": [
+			"#include \"${1:/* header */}\"\n",
+			"namespace ${2:/* namespace_name */}",
+			"{",
+			"${3:/* ClassName */}::${3:/* ClassName */}()",
+			"{\n$0",
+			"}",
+			"}  // namespace ${2:/* namespace_name */}\n",
+		],
+		"description": "ROS2 code snippet for class define"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Publisher
+	//--------------------------------------------------
+
+	"ROS2 Publisher": {
+		"prefix": "ros2_publisher",
+		"body": [
+			"rclcpp::Publisher<${1:/* msg_type */}>::SharedPtr ${2:/* pub_name */};$0",
+		],
+		"description": "ROS2 code snippet for publisher"
+	},
+
+	"ROS2 Publisher Init": {
+		"prefix": "ros2_publisher_init",
+		"body": [
+			"${1:/* pub_name */} = this->create_publisher<${2:/* msg_type */}>(\"${3:/* topic_name */}\", 10);$0",
+		],
+		"description": "ROS2 code snippet for publisher init"
+	},
+
+	"ROS2 Publisher Publish": {
+		"prefix": "ros2_publisher_publish",
+		"body": [
+			"auto msg = ${1:/* msg_type */}();",
+			"RCLCPP_INFO(this->get_logger(), \"Publishing message\");",
+			"${2:/* pub_name */}->publish(msg);$0",
+		],
+		"description": "ROS2 code snippet for publisher publish"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Subscriber
+	//--------------------------------------------------
+
+	"ROS2 Subscriber": {
+		"prefix": "ros2_subscriber",
+		"body": [
+			"rclcpp::Subscription<${1:/* msg_type */}>::SharedPtr ${2:/* sub_name */};$0",
+		],
+		"description": "ROS2 code snippet for subscriber"
+	},
+
+	"ROS2 Subscriber Callback": {
+		"prefix": "ros2_subscriber_callback",
+		"body": [
+			"void ${1:/* sub_callback_name */}(const ${2:/* msg_type */}::SharedPtr msg)",
+		  "{",
+			"\tRCLCPP_INFO(this->get_logger(), \"Received message\");",
+			"}$0",
+		],
+		"description": "ROS2 code snippet for subscriber callback"
+	},
+
+	"ROS2 Subscriber Init": {
+		"prefix": "ros2_subscriber_init",
+		"body": [
+			"using std::placeholders::_1;",
+			"${1:/* sub_name */} = this->create_subscription<${2:/* msg_type */}>(",
+			"\t\"${3:/* topic_name */}\", 10, std::bind(&${4:/* ClassName */}::${5:/* sub_callback_name */}, this, _1));$0",
+		],
+		"description": "ROS2 code snippet for subscriber init"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Service Client
+	//--------------------------------------------------
+
+	"ROS2 Client": {
+		"prefix": "ros2_client",
+		"body": [
+			"rclcpp::Client<${1:/* srv_type */}>::SharedPtr ${2:/* client_name */};$0",
+		],
+		"description": "ROS2 code snippet for client"
+	},
+
+	"ROS2 Client Response Callback": {
+		"prefix": "ros2_client_response_callback",
+		"body": [
+			"using ServiceResponseFuture = rclcpp::Client<${1:/* srv_type */}>::SharedFuture;",
+			"void ${2:/* client_response_callback_name */}(ServiceResponseFuture future)",
+			"{",
+			"\tauto response = future.get();",
+			"\tRCLCPP_INFO(this->get_logger(), \"Received response\");",
+			"}",
+		],
+		"description": "ROS2 code snippet for client service response callback"
+	},
+
+	"ROS2 Client Init": {
+		"prefix": "ros2_client_init",
+		"body": [
+			"${1:/* client_name */} = this->create_client<${2:/* srv_type */}>(\"${3:/* srv_name */}\");$0"
+		],
+		"description": "ROS2 code snippet for ros2_client_init"
+	},
+
+	"ROS2 Client Wait for Server": {
+		"prefix": "ros2_client_wait_for_server",
+		"body": [
+			"while (!${1:/* client_name */}->wait_for_service(std::chrono::seconds(1))) {",
+			"\tif (!rclcpp::ok()) {",
+			"\t\tRCLCPP_ERROR(this->get_logger(), \"Interruped while waiting for the server.\");",
+			"\t\treturn;",
+			"\t}",
+			"\tRCLCPP_INFO(this->get_logger(), \"Server not available, waiting again...\");",
+			"}$0",
+		],
+		"description": "ROS2 code snippet for client wait for server"
+	},
+
+	"ROS2 Client Async Send Request": {
+		"prefix": "ros2_client_async_send_request",
+		"body": [
+			"using std::placeholders::_1;",
+			"auto request = std::make_shared<${1:/* srv_type */}::Request>();",
+			"RCLCPP_INFO(this->get_logger(), \"Sending request\");",
+			"${2:/* client_name */}->async_send_request(",
+			"\trequest, std::bind(&${3:/* ClassName */}::${4:/* client_response_callback_name */}, this, _1));$0",
+		],
+		"description": "ROS2 code snippet for client async send request"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Service Server
+	//--------------------------------------------------
+
+	"ROS2 Server": {
+		"prefix": "ros2_server",
+		"body": [
+			"rclcpp::Service<${1:/* srv_type */}>::SharedPtr ${2:/* server_name */};$0",
+		],
+		"description": "ROS2 code snippet for server"
+	},
+
+	"ROS2 Server Callback": {
+		"prefix": "ros2_server_callback",
+		"body": [
+ 			"void ${1:/* server_callback_name */}(",
+			"\tconst std::shared_ptr<${2:/* srv_type */}::Request> request,",
+			"\tstd::shared_ptr<${2:/* srv_type */}::Response> response)",
+			"{",
+			"\tRCLCPP_INFO(this->get_logger(), \"Received request\");",
+			"}$0",
+		],
+		"description": "ROS2 code snippet for server callback"
+	},
+
+	"ROS2 Server Init": {
+		"prefix": "ros2_server_init",
+		"body": [
+			"using std::placeholders::_1;",
+			"using std::placeholders::_2;",
+			"${1:/* server_name */} = this->create_service<${2:/* srv_type */}>(",
+			"\t\"${3:/* srv_name */}\", std::bind(&${4:/* ClassName */}::${5:/* server_callback_name */}, this, _1, _2));$0",
+		],
+		"description": "ROS2 code snippet for server init"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Action Client
+	//--------------------------------------------------
+
+	"ROS2 Action Client": {
+		"prefix": "ros2_action_client",
+		"body": [
+			"rclcpp_action::Client<${1:/* action_type */}>::SharedPtr ${2:/* action_client_name */};$0",
+		],
+		"description": "ROS2 code snippet for action client"
+	},
+
+	"ROS2 Action Client Callback": {
+		"prefix": "ros2_action_client_callback",
+		"body": [
+			"using ClientGoalHandle = rclcpp_action::ClientGoalHandle<${1:/* action_type */}>;",
+			"void goal_response_callback(const ClientGoalHandle::SharedPtr & future)",
+			"{",
+			"\tauto goal_handle = future.get();",
+			"\tif (!goal_handle) {",
+			"\t\tRCLCPP_ERROR(this->get_logger(), \"Goal rejected by server\");",
+			"\t} else {",
+			"\t\tRCLCPP_INFO(this->get_logger(), \"Goal accepted by server, waiting for result\");",
+			"\t}",
+			"}",
+			"",
+			"void feedback_callback(",
+			"\tClientGoalHandle::SharedPtr,",
+			"\tconst std::shared_ptr<const ${1:/* action_type */}::Feedback> feedback)",
+			"{",
+			"\tRCLCPP_INFO(this->get_logger(), \"Received feedback\");",
+			"}",
+			"",
+			"void result_callback(const ClientGoalHandle::WrappedResult & result)",
+			"{",
+			"\tswitch (result.code) {",
+			"\t\tcase rclcpp_action::ResultCode::SUCCEEDED:",
+			"\t\t\tRCLCPP_INFO(this->get_logger(), \"Server successfully executed goal\");",
+			"\t\t\tbreak;",
+			"\t\tcase rclcpp_action::ResultCode::ABORTED:",
+			"\t\t\tRCLCPP_ERROR(this->get_logger(), \"Goal was aborted\");",
+			"\t\t\treturn;",
+			"\t\tcase rclcpp_action::ResultCode::CANCELED:",
+			"\t\t\tRCLCPP_ERROR(this->get_logger(), \"Goal was canceled\");",
+			"\t\t\treturn;",
+			"\t\tdefault:",
+			"\t\t\tRCLCPP_ERROR(this->get_logger(), \"Unknown result code\");",
+			"\t\t\treturn;",
+			"\t}",
+			"}$0",
+		],
+		"description": "ROS2 code snippet for action client response, feedback and result callbacks"
+	},
+
+	"ROS2 Action Client Init": {
+		"prefix": "ros2_action_client_init",
+		"body": [
+			"${1:/* action_client_name */} = rclcpp_action::create_client<${2:/* action_type */}>(",
+			"\tthis, \"${3:/* action_name */}\");$0"
+		],
+		"description": "ROS2 code snippet for action client init"
+	},
+
+	"ROS2 Action Client Wait for Action Server": {
+		"prefix": "ros2_action_client_wait_for_action_server",
+		"body": [
+			"while (!${1:/* action_client_name */}->wait_for_action_server(std::chrono::seconds(1))) {",
+			"\tif (!rclcpp::ok()) {",
+			"\t\tRCLCPP_ERROR(this->get_logger(), \"Interruped while waiting for the action server.\");",
+			"\t\treturn;",
+			"\t}",
+			"\tRCLCPP_INFO(this->get_logger(), \"Action server not available, waiting again...\");",
+			"}$0",
+		],
+		"description": "ROS2 code snippet for action client wait for action server"
+	},
+
+	"ROS2 Action Client Async Send Goal": {
+		"prefix": "ros2_action_client_async_send_goal",
+		"body": [
+			"using std::placeholders::_1;",
+			"using std::placeholders::_2;",
+			"auto goal = ${1:/* action_type */}::Goal();",
+			"auto send_goal_options =",
+			"\trclcpp_action::Client<${1:/* action_type */}>::SendGoalOptions();",
+			"send_goal_options.goal_response_callback =",
+			"\tstd::bind(&${2:/* ClassName */}::goal_response_callback, this, _1);",
+			"send_goal_options.feedback_callback =",
+			"\tstd::bind(&${2:/* ClassName */}::feedback_callback, this, _1, _2);",
+			"send_goal_options.result_callback =",
+			"\tstd::bind(&${2:/* ClassName */}::result_callback, this, _1);",
+			"RCLCPP_INFO(this->get_logger(), \"Sending goal\");",
+			"${3:/* action_client_name */}->async_send_goal(goal, send_goal_options);$0",
+		],
+		"description": "ROS2 code snippet for client async send request"
+	},
+
+	"ROS2 Action Client Async Cancel All Goals": {
+		"prefix": "ros2_action_client_async_cancel_all_goals",
+		"body": [
+			"${1:/* action_client_name */}->async_cancel_all_goals();$0",
+		],
+		"description": "ROS2 code snippet for action client wait for action server"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Action Server
+	//--------------------------------------------------
+
+	"ROS2 Action Server": {
+		"prefix": "ros2_action_server",
+		"body": [
+			"rclcpp_action::Server<${1:/* action_type */}>::SharedPtr ${2:/* action_server_name_ */};$0",
+		],
+		"description": "ROS2 code snippet for action server"
+	},
+
+	"ROS2 Action Server Callback": {
+		"prefix": "ros2_action_server_callback",
+		"body": [
+			"using std::placeholders::_1;",
+		  "using std::placeholders::_2;",
+			"using ServerGoalHandle = rclcpp_action::ServerGoalHandle<${1:/* action_type */}>;",
+			"rclcpp_action::GoalResponse goal_callback(",
+			"\tconst rclcpp_action::GoalUUID & uuid,",
+			"\tstd::shared_ptr<const ${1:/* action_type */}::Goal> goal)",
+			"{",
+			"\tRCLCPP_INFO(this->get_logger(), \"Received goal request\");",
+			"\t(void)uuid;",
+			"\tif (false) {",
+			"\t\treturn rclcpp_action::GoalResponse::REJECT;",
+			"\t}",
+			"\treturn rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;",
+			"}",
+			"",
+			"rclcpp_action::CancelResponse cancel_callback(const std::shared_ptr<ServerGoalHandle> goal_handle)",
+			"{",
+			"\tRCLCPP_INFO(this->get_logger(), \"Received cancel request\");",
+			"\t(void)goal_handle;",
+			"\treturn rclcpp_action::CancelResponse::ACCEPT;",
+			"}",
+			"",
+			"void accepted_callback(const std::shared_ptr<ServerGoalHandle> goal_handle)",
+			"{",
+			"\tstd::thread(std::bind(&${2:/* ClassName */}::execute, this, _1), goal_handle).detach();",
+			"}",
+			"",
+			"void execute(const std::shared_ptr<ServerGoalHandle> goal_handle)",
+			"{"
+			"\tRCLCPP_INFO(this->get_logger(), \"Executing goal\");",
+			"\tconst auto goal = goal_handle->get_goal();",
+			"\tauto feedback = std::make_shared<${1:/* action_type */}::Feedback>();",
+			"\tauto result = std::make_shared<${1:/* action_type */}::Result>();\n",
+			"\trclcpp::Rate loop_rate(1);",
+			"\tfor (size_t i = 0; i < 10; i++) {",
+			"\t\tif (goal_handle->is_canceling()) {",
+			"\t\t\tgoal_handle->canceled(result);",
+			"\t\t\tRCLCPP_ERROR(this->get_logger(), \"Goal Canceled\");",
+			"\t\t\treturn;",
+			"\t\t}\n",
+			"\t\tgoal_handle->publish_feedback(feedback);",
+			"\t\tRCLCPP_INFO(this->get_logger(), \"Sent feedback\");",
+			"\t\tloop_rate.sleep();",
+			"\t}\n",
+			"\tgoal_handle->succeed(result);",
+			"\tRCLCPP_INFO(this->get_logger(), \"Successfully executed goal\");",
+			"}$0",
+		],
+		"description": "ROS2 code snippet for action server callback"
+	},
+
+	"ROS2 Action Server Init": {
+		"prefix": "ros2_action_server_init",
+		"body": [
+			"${1:/* action_server_name */} = rclcpp_action::create_server<${2:/* action_type */}>(",
+			"\tthis,",
+			"\t\"${3:/* action_name */}\",",
+			"\tstd::bind(&${4:/* ClassName*/}::goal_callback, this, _1, _2),",
+			"\tstd::bind(&${4:/* ClassName*/}::cancel_callback, this, _1),",
+			"\tstd::bind(&${4:/* ClassName*/}::accepted_callback, this, _1));$0",
+		],
+		"description": "ROS2 code snippet for action server init"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Timer
+	//--------------------------------------------------
+
+	"ROS2 Timer": {
+		"prefix": "ros2_timer",
+		"body": [
+			"rclcpp::TimerBase::SharedPtr ${1:/* timer_name */};$0",
+		],
+		"description": "ROS2 code snippet for timer"
+	},
+
+	"ROS2 Timer Callback": {
+		"prefix": "ros2_timer_callback",
+		"body": [
+			"void ${1:/* timer_callback_name */}()",
+		  "{",
+		  "\tRCLCPP_INFO(this->get_logger(), \"Timer event\");",
+	  	"}$0",
+		],
+		"description": "ROS2 code snippet for timer callback"
+	},
+
+	"ROS2 Timer Init": {
+		"prefix": "ros2_timer_init",
+		"body": [
+			"${1:/* timer_name */} = this->create_wall_timer(",
+			"\tstd::chrono::seconds(1),",
+			"\tstd::bind(&${2:/* ClassName */}::${3:/* timer_callback_name */}, this));$0",
+		],
+		"description": "ROS2 code snippet for timer init"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Parameter
+	//--------------------------------------------------
+
+	"ROS2 Parameter Declare": {
+		"prefix": "ros2_parameter_declare",
+		"body": [
+      "this->declare_parameter<${1:/* param_type */}>(\"${2:/* param_name */}\", ${3:/* default_value */});$0",
+		],
+		"description": "ROS2 code snippet for declaring parameter"
+	},
+
+	"ROS2 Parameter Get": {
+		"prefix": "ros2_parameter_get",
+		"body": [
+      "auto ${1:/* param_name */} = this->get_parameter(\"${1:/* param_name */}\").get_value<${2:/* param_type */}>();$0"
+		],
+		"description": "ROS2 code snippet for getting parameter"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Logging Macro
+	//--------------------------------------------------
+
+	"ROS2 Logging Debug": {
+		"prefix": "ros2_logging_debug",
+		"body": [
+			"RCLCPP_DEBUG(this->get_logger(), \"${1:/* log */}\");$0",
+		],
+		"description": "ROS2 code snippet for debug logging macro"
+	},
+
+	"ROS2 Logging Info": {
+		"prefix": "ros2_logging_info",
+		"body": [
+			"RCLCPP_INFO(this->get_logger(), \"${1:/* log */}\");$0",
+		],
+		"description": "ROS2 code snippet for info logging macro"
+	},
+
+	"ROS2 Logging Warn": {
+		"prefix": "ros2_logging_warn",
+		"body": [
+			"RCLCPP_WARN(this->get_logger(), \"${1:/* log */}\");$0",
+		],
+		"description": "ROS2 code snippet for warn logging macro"
+	},
+
+	"ROS2 Logging Error": {
+		"prefix": "ros2_logging_error",
+		"body": [
+			"RCLCPP_ERROR(this->get_logger(), \"${1:/* log */}\");$0",
+		],
+		"description": "ROS2 code snippet for error logging macro"
+	},
+
+	"ROS2 Logging Fatal": {
+		"prefix": "ros2_logging_fatal",
+		"body": [
+			"RCLCPP_FATAL(this->get_logger(), \"${1:/* log */}\");$0",
+		],
+		"description": "ROS2 code snippet for fatal logging macro"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Rate
+	//--------------------------------------------------
+
+	"ROS2 Rate": {
+		"prefix": "ros2_rate",
+		"body": [
+			"rclcpp::Rate loop_rate(${1:/* rate */});$0",
+			"loop_rate.sleep();",
+		],
+		"description": "ROS2 code snippet for rate"
+	},
+
+  //--------------------------------------------------
+	// ROS2 Copyright
+	//--------------------------------------------------
+
+	"ROS2 Copyright": {
+		"prefix": "ros2_copyright",
+		"body": [
+			"// Copyright ${1:/* Year */} ${2:/* Name */}",
+      "//",
+      "// ${3:/* LICENSE (Checkout: https://github.com/ament/ament_lint/tree/master/ament_copyright/test/cases) */}$0",
+		],
+		"description": "ROS2 code snippet for copyright"
+	},
+}

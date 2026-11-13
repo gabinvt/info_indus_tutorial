@@ -1,0 +1,579 @@
+{
+	"name": "esbonio",
+	"displayName": "Esbonio",
+	"description": "An extension for editing sphinx projects",
+	"repository": {
+		"url": "https://github.com/swyddfa/esbonio"
+	},
+	"author": "Esbonio Developers",
+	"publisher": "swyddfa",
+	"license": "MIT",
+	"version": "2.1.0",
+	"keywords": [
+		"sphinx",
+		"documentation"
+	],
+	"categories": [
+		"Programming Languages"
+	],
+	"scripts": {
+		"compile": "node esbuild.mjs",
+		"watch": "tsc -p . --watch",
+		"deploy-vsce": "vsce publish -i *.vsix --baseImagesUrl https://github.com/swyddfa/esbonio/raw/release/code/",
+		"deploy-ovsx": "ovsx publish -i *.vsix --baseImagesUrl https://github.com/swyddfa/esbonio/raw/release/code/",
+		"package": "vsce package --baseImagesUrl https://github.com/swyddfa/esbonio/raw/release/code/",
+		"vscode:prepublish": "npm run compile",
+		"test": "vscode-test"
+	},
+	"main": "dist/node/extension.js",
+	"extensionDependencies": [
+		"ms-python.python",
+		"chrisjsewell.myst-tml-syntax"
+	],
+	"dependencies": {
+		"@vscode/python-extension": "^1.0.6",
+		"semver": "^7.8.5",
+		"vscode-languageclient": "^9.0.1"
+	},
+	"devDependencies": {
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^22",
+		"@types/vscode": "1.82.0",
+		"@vscode/test-cli": "^0.0.12",
+		"@vscode/test-electron": "^2.5.2",
+		"@vscode/vsce": "^3.9.2",
+		"esbuild": "^0.28.1",
+		"ovsx": "^0.10.12",
+		"typescript": "^6.0.3"
+	},
+	"engines": {
+		"vscode": "^1.82.0"
+	},
+	"capabilities": {
+		"virtualWorkspaces": {
+			"supported": false
+		},
+		"untrustedWorkspaces": {
+			"supported": false,
+			"description": "Building and inspecting Sphinx projects executes arbitrary code."
+		}
+	},
+	"icon": "icon.png",
+	"activationEvents": [
+		"onLanguage:restructuredtext",
+		"workspaceContains:**/conf.py",
+		"workspaceContains:*.rst"
+	],
+	"contributes": {
+		"commands": [
+			{
+				"command": "esbonio.preview.open",
+				"title": "Preview Documentation",
+				"icon": "$(open-preview)",
+				"category": "Esbonio"
+			},
+			{
+				"command": "esbonio.preview.openSide",
+				"title": "Preview Documentation in Split Window",
+				"icon": "$(book)",
+				"category": "Esbonio"
+			},
+			{
+				"command": "esbonio.preview.setScrollingBehavior",
+				"title": "Set Synchronized Scrolling Behavior",
+				"icon": "$(settings)",
+				"category": "Esbonio"
+			},
+			{
+				"command": "esbonio.server.restart",
+				"title": "Restart Language Server",
+				"category": "Esbonio",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "esbonio.sphinx.restart",
+				"title": "Restart Sphinx Process",
+				"category": "Esbonio",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "esbonio.sphinx.selectProcessToRestart",
+				"title": "Restart Sphinx Process",
+				"category": "Esbonio",
+				"icon": "$(refresh)"
+			}
+		],
+		"configuration": [
+			{
+				"title": "Server",
+				"properties": {
+					"esbonio.server.enabled": {
+						"scope": "window",
+						"type": "boolean",
+						"default": true,
+						"description": "Enable/Disable the language server"
+					},
+					"esbonio.server.documentSelector": {
+						"scope": "window",
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"scheme": {
+									"type": "string",
+									"description": "The URI scheme that this selector applies to"
+								},
+								"language": {
+									"type": "string",
+									"description": "The language id this selector will select"
+								},
+								"pattern": {
+									"type": "string",
+									"description": "Only select uris that match the given pattern"
+								}
+							}
+						},
+						"default": [],
+						"description": "Override the extension's default document selector"
+					},
+					"esbonio.server.launchArgs": {
+						"scope": "window",
+						"default": [
+							"-m",
+							"esbonio.server"
+						],
+						"description": "Arguments to pass to Python when launching the language server.",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"esbonio.server.pythonCommand": {
+						"scope": "window",
+						"default": null,
+						"oneOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"command": {
+										"type": "array",
+										"description": "The Python command to use when launching the language server."
+									},
+									"env": {
+										"type": "object",
+										"description": "Environment variables to set/override for the language server."
+									}
+								}
+							}
+						],
+						"description": "The command to use to launch the Python interpreter that hosts the Language Server.\n\nBy default this extension will use the Python Extension to select any interpreter and point it at the default environment bundled with the extension. If you do not use the Python Extension or you wish to use a different environment, then this option can be used to override the default behavior.",
+						"markdownDescription": "The command to use to launch the Python interpreter that hosts the Language Server.\n\nBy default this extension will use the Python Extension to select any interpreter and point it at the default environment bundled with the extension. If you do not use the Python Extension or you wish to use a different environment, then this option can be used to override the default behavior.\n\n**Note:** This setting is **not used to build your documentation**, to select the Python environment for your Sphinx project use the `#esbonio.sphinx.pythonCommand#` setting instead."
+					}
+				}
+			},
+			{
+				"title": "Sphinx",
+				"properties": {
+					"esbonio.sphinx.buildArguments": {
+						"scope": "resource",
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"default": null,
+						"description": "The sphinx-build arguments to use."
+					},
+					"esbonio.sphinx.buildCommand": {
+						"scope": "resource",
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"default": null,
+						"deprecationMessage": "Deprecated in favour of esbonio.sphinx.buildArguments",
+						"description": "The sphinx-build arguments to use."
+					},
+					"esbonio.sphinx.buildTriggers": {
+						"scope": "window",
+						"type": "object",
+						"default": null,
+						"properties": {
+							"onSave": {
+								"type": "boolean",
+								"default": true,
+								"description": "Trigger a build each time a file is saved"
+							},
+							"onChange": {
+								"type": [
+									"boolean",
+									"number"
+								],
+								"default": 2,
+								"description": "Trigger a build each time a file is changed"
+							}
+						},
+						"description": "Triggers that control when the language server rebuilds your project."
+					},
+					"esbonio.sphinx.configOverrides": {
+						"scope": "resource",
+						"type": "object",
+						"default": null,
+						"description": "Overrides to apply to Sphinx's configuration."
+					},
+					"esbonio.sphinx.pythonCommand": {
+						"scope": "resource",
+						"description": "Instructions on how to launch the background Sphinx process for the project",
+						"default": null,
+						"oneOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							{
+								"type": "object",
+								"properties": {
+									"command": {
+										"type": "array",
+										"description": "The Python command to use when launching the background Sphinx process."
+									},
+									"cwd": {
+										"type": "string",
+										"description": "The working directory in which to launch the background Sphinx process."
+									},
+									"env": {
+										"type": "object",
+										"description": "Environment variables to set/override for the background Sphinx process."
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"title": "Previews",
+				"properties": {
+					"esbonio.preview.bind": {
+						"scope": "window",
+						"type": "string",
+						"default": "localhost",
+						"description": "The network interface to bind the preview server to."
+					},
+					"esbonio.preview.httpPort": {
+						"scope": "window",
+						"type": "integer",
+						"default": 0,
+						"description": "The port number to bind the HTTP server to.\nIf 0, a random port number will be chosen"
+					},
+					"esbonio.preview.wsPort": {
+						"scope": "window",
+						"type": "integer",
+						"default": 0,
+						"description": "The port number to bind the WebSocket server to.\nIf 0, a random port number will be chosen"
+					},
+					"esbonio.preview.synchronizeScroll": {
+						"scope": "window",
+						"type": "string",
+						"default": "bothWays",
+						"enum": [
+							"bothWays",
+							"editorWithPreview",
+							"previewWithEditor",
+							"disabled"
+						],
+						"enumDescriptions": [
+							"Synchronized scrolling will work both ways",
+							"Scrolling the editor will automatically scroll the preview pane",
+							"Scrolling the preview pane will automatically scroll the editor",
+							"Synchronized scrolling is disabled"
+						],
+						"description": "Control how synchronized scrolling behaves"
+					}
+				}
+			},
+			{
+				"title": "Completion",
+				"properties": {
+					"esbonio.server.completion.preferredInsertBehavior": {
+						"scope": "window",
+						"type": "string",
+						"enum": [
+							"insert",
+							"replace"
+						],
+						"enumDescriptions": [
+							"Completions will only append to existing text. Server will only provide suggestions compatible with existing text.",
+							"Completions will replace existing text, allowing for complete rewrites of existing items. Server will respond with all valid options."
+						],
+						"default": "replace",
+						"description": "Indicate to the server how you would prefer completions to behave when accepted."
+					}
+				}
+			},
+			{
+				"title": "Logging",
+				"properties": {
+					"esbonio.logging.level": {
+						"scope": "window",
+						"type": "string",
+						"default": "info",
+						"enum": [
+							"critical",
+							"fatal",
+							"error",
+							"warning",
+							"info",
+							"debug"
+						],
+						"description": "The default level of log message to show in the log"
+					},
+					"esbonio.logging.format": {
+						"scope": "window",
+						"type": "string",
+						"default": null,
+						"description": "The default format string to apply to log messages"
+					},
+					"esbonio.logging.filepath": {
+						"scope": "window",
+						"type": "string",
+						"default": null,
+						"description": "If set, record log messages in the given filepath (path is relative to the server's working directory)."
+					},
+					"esbonio.logging.stderr": {
+						"scope": "window",
+						"type": "boolean",
+						"default": true,
+						"description": "If set, print log messages to stderr"
+					},
+					"esbonio.logging.window": {
+						"scope": "window",
+						"type": "boolean",
+						"default": false,
+						"description": "If set, send log messages as window/logMessage notifications"
+					},
+					"esbonio.logging.enabledMethods": {
+						"scope": "window",
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"default": null,
+						"description": "If set, only log messages related to the given LSP methods (e.g. `textDocument/completion`)"
+					},
+					"esbonio.logging.config": {
+						"scope": "window",
+						"type": "object",
+						"patternProperties": {
+							".*": {
+								"type": "object",
+								"properties": {
+									"level": {
+										"type": "string",
+										"enum": [
+											"critical",
+											"fatal",
+											"error",
+											"warning",
+											"info",
+											"debug"
+										],
+										"description": "The level of log message to show in the log for this logger"
+									},
+									"filepath": {
+										"type": "string",
+										"description": "If set, log messages from this logger to the given file (path is relative to server working directory)."
+									},
+									"stderr": {
+										"type": "boolean",
+										"description": "If set, print messages from this logger to stderr."
+									},
+									"window": {
+										"type": "boolean",
+										"description": "If set, send messages from this logger as window/logMessage notifications."
+									}
+								}
+							}
+						},
+						"default": {},
+						"description": "Low level logging configuration settings to apply to individual loggers"
+					}
+				}
+			},
+			{
+				"title": "Developer Options",
+				"properties": {
+					"esbonio.trace.server": {
+						"scope": "window",
+						"type": "string",
+						"default": "off",
+						"enum": [
+							"off",
+							"messages",
+							"verbose"
+						],
+						"description": "Controls if LSP messages sent to/from the server should be logged.",
+						"enumDescriptions": [
+							"do not log any lsp messages",
+							"log all lsp messages sent to/from the server",
+							"log all lsp messages sent to/from the server, including their contents"
+						]
+					},
+					"esbonio.server.showDeprecationWarnings": {
+						"scope": "window",
+						"type": "boolean",
+						"default": false,
+						"description": "Show deprecation warnings as diagnostics."
+					},
+					"esbonio.sphinx.enableDevTools": {
+						"scope": "resource",
+						"type": "boolean",
+						"default": false,
+						"description": "Enable lsp-devtools integration for sphinx agent instances."
+					},
+					"esbonio.preview.showLineMarkers": {
+						"scope": "resource",
+						"type": "boolean",
+						"default": false,
+						"description": "Render the source line number markers in the preview pane."
+					}
+				}
+			}
+		],
+		"languages": [
+			{
+				"id": "restructuredtext",
+				"extensions": [
+					".rst",
+					".rest"
+				],
+				"aliases": [
+					"reStructuredText",
+					"restructuredtext",
+					"ReStructured Text",
+					"reStructured Text",
+					"RST",
+					"ReST",
+					"reST"
+				]
+			},
+			{
+				"id": "esbonio-log-output",
+				"mimetypes": [
+					"text/x-esbonio-log-output"
+				]
+			}
+		],
+		"grammars": [
+			{
+				"language": "esbonio-log-output",
+				"scopeName": "source.esbonio-log-output",
+				"path": "./syntaxes/esbonio-log-output.tmLanguage.json"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "esbonio.preview.open",
+				"key": "ctrl+shift+v",
+				"when": "editorTextFocus && editorLangId == restructuredtext"
+			},
+			{
+				"command": "esbonio.preview.openSide",
+				"key": "ctrl+k v",
+				"when": "editorTextFocus && editorLangId == restructuredtext"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "esbonio.sphinx.restart",
+					"when": "false"
+				}
+			],
+			"editor/title": [
+				{
+					"command": "esbonio.preview.openSide",
+					"alt": "esbonio.preview.open",
+					"group": "navigation",
+					"when": "resourceLangId == restructuredtext || resourceLangId == markdown"
+				},
+				{
+					"command": "esbonio.preview.setScrollingBehavior",
+					"group": "navigation",
+					"when": "activeWebviewPanelId == 'esbonioPreview'"
+				}
+			],
+			"view/title": [
+				{
+					"command": "esbonio.server.restart",
+					"when": "view == sphinxProcesses",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "esbonio.sphinx.restart",
+					"when": "view == sphinxProcesses && viewItem == sphinxProcess",
+					"group": "inline"
+				}
+			]
+		},
+		"views": {
+			"explorer": [
+				{
+					"id": "sphinxProcesses",
+					"name": "Sphinx Processes",
+					"icon": "$(server-process)"
+				}
+			]
+		},
+		"walkthroughs": [
+			{
+				"id": "getting-started",
+				"title": "Getting Started",
+				"description": "Getting started with the Esbonio extension",
+				"steps": [
+					{
+						"id": "pickenv",
+						"title": "Select Build Environment",
+						"description": "Configure the Python environment that you want Esbonio to use when building your documentation.",
+						"media": {
+							"markdown": "guides/bring-your-own-sphinx.md"
+						}
+					},
+					{
+						"id": "setbuildcommand",
+						"title": "Configure Build Arguments",
+						"media": {
+							"markdown": "guides/example-commands.md"
+						},
+						"description": "Provide the `sphinx-build` arguments that you want Esbonio to use when building your documentation"
+					}
+				]
+			}
+		]
+	},
+	"__metadata": {
+		"id": "7b5c9547-1e76-4466-a28e-4387a2eccaf1",
+		"publisherId": "93c4ac6a-93c7-4f59-85e6-78dd65569afd",
+		"publisherDisplayName": "Swyddfa",
+		"targetPlatform": "undefined",
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"installedTimestamp": 1794580795064,
+		"preRelease": false
+	}
+}

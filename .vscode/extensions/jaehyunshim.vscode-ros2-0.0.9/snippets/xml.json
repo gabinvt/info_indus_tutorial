@@ -1,0 +1,151 @@
+{
+	//--------------------------------------------------
+	// ROS2 Launch XML
+	//--------------------------------------------------
+
+	"ROS2 Launch": {
+		"prefix": "ros2_launch",
+		"body": [
+			"<launch>",
+			"\t<node pkg=\"${1:/* pkg_name */}\" exec=\"${2:/* exec_name */}\" name=\"${3:/* node_name */}\" output=\"screen\"/>",
+			"</launch>\n$0",
+		],
+		"description": "ROS2 code snippet for launch template"
+	},
+
+	"ROS2 Launch Argument": {
+		"prefix": "ros2_launch_argument",
+		"body": [
+			"<arg name=\"${1:/* arg_name */}\" default=\"${2:/* default_value */}\"/>",
+		],
+		"description": "ROS2 code snippet for launch argument"
+	},
+
+	"ROS2 Launch Node": {
+		"prefix": "ros2_launch_node",
+		"body": [
+			"<node pkg=\"${1:/* pkg_name */}\" exec=\"${2:/* exec_name */}\" name=\"${3:/* node_name */}\" output=\"screen\"/>",
+		],
+		"description": "ROS2 code snippet for launch node"
+	},
+
+	"ROS2 Launch Node with Options": {
+		"prefix": "ros2_launch_node_with_options",
+		"body": [
+			"<node pkg=\"${1:/* pkg_name */}\" exec=\"${2:/* exec_name */}\" name=\"${3:/* node_name */}\" output=\"screen\">",
+			"\t<remap from=\"${4:/* old_topic_name */}\" to=\"${5:/* new_topic_name */}\"/>",
+			"\t<param name=\"${6:/* param_name */}\" value=\"${7:/* param_value */}\"/>",
+			"\t<param from=\"$(find-pkg-share ${8:/* param_pkg_name */})/config/${9:/* file_name */}\"/>",
+			"</node>$0",
+		],
+		"description": "ROS2 code snippet for launch node with options"
+	},
+
+	"ROS2 Launch Include": {
+		"prefix": "ros2_launch_include",
+		"body": [
+			"<include file=\"$(find-pkg-share ${1:/* pkg_name */})/launch/${2:/* file_name */}\"/>",
+		],
+		"description": "ROS2 code snippet for launch include"
+	},
+
+	//--------------------------------------------------
+	// ROS2 URDF
+	//--------------------------------------------------
+
+	"ROS2 URDF": {
+		"prefix": "ros2_urdf",
+		"body": [
+			"<?xml version=\"1.0\"?>",
+			"<robot name=\"${1:/* robot_name */}\">",
+			"\t<link name=\"${2:/* parent_link */}\"/>\n",
+			"\t<joint name=\"${3:/* joint_name */}\" type=\"${4:/* joint_type */}\">",
+			"\t\t<parent link=\"${2:/* parent_link */}\"/>",
+			"\t\t<child link=\"${5:/* child_link */}\"/>",
+			"\t\t<origin xyz=\"0 0 0\" rpy=\"0 0 0\"/>",
+			"\t\t<axis xyz=\"0 0 0\"/>",
+			"\t</joint>\n",
+			"\t<link name=\"${5:/* child_link */}\"/>",
+			"</robot>\n$0"
+		],
+		"description": "ROS2 code snippet for urdf"
+	},
+
+	"ROS2 URDF Link": {
+		"prefix": "ros2_urdf_link",
+		"body": [
+			"<link name=\"${1:link_name}\"/>$0",
+		],
+		"description": "ROS2 code snippet for urdf link"
+	},
+
+	"ROS2 URDF Link with Components": {
+		"prefix": "ros2_urdf_link_with_components",
+		"body": [
+			"<link name=\"${1:link_name}\">",
+			"\t<visual>",
+			"\t\t<geometry>",
+			"\t\t\t<mesh filename=\"package://pkg_name/meshes/file_name\"/>",
+			"\t\t\t<box size=\"1.0 1.0 1.0\" />",
+			"\t\t\t<cylinder radius=\"1.0\" length=\"1.0\"/>",
+			"\t\t</geometry>",
+			"\t\t<material name=\"LightGrey\">",
+			"\t\t\t<color rgba=\"0.7 0.7 0.7 1.0\"/>",
+			"\t\t</material>",
+			"\t</visual>",
+			"\t<collision>",
+			"\t\t<geometry>",
+			"\t\t\t<mesh filename=\"package://pkg_name/meshes/file_name\"/>",
+			"\t\t\t<box size=\"1.0 1.0 1.0\" />",
+			"\t\t\t<cylinder radius=\"1.0\" length=\"1.0\"/>",
+			"\t\t</geometry>",
+			"\t</collision>",
+			"\t<inertial>",
+			"\t\t<mass value=\"0.0\"/>",
+			"\t\t<origin xyz=\"0.0 0.0 0.0\" rpy=\"0.0 0.0 0.0\"/>",
+			"\t\t<inertia ixx=\"0.0\" ixy=\"0.0\" ixz=\"0.0\" iyy=\"0.0\" iyz=\"0.0\" izz=\"0.0\"/>",
+			"\t</inertial>",
+			"</link>$0",
+		],
+		"description": "ROS2 code snippet for urdf link with visual, collision, inertial components"
+	},
+
+	"ROS2 URDF Joint": {
+		"prefix": "ros2_urdf_joint",
+		"body": [
+			"<joint name=\"${1:joint_name}\" type=\"${2:joint_type}\">",
+			"\t<parent link=\"${3:parent_link}\"/>",
+			"\t<child link=\"${4:child_link}\"/>",
+			"\t<origin xyz=\"0 0 0\" rpy=\"0 0 0\"/>",
+			"\t<axis xyz=\"0 0 0\"/>",
+			"</joint>$0",
+		],
+		"description": "ROS2 code snippet for urdf joint"
+	},
+
+	"ROS2 URDF XACRO": {
+		"prefix": "ros2_urdf_xacro",
+		"body": [
+			"<?xml version=\"1.0\"?>",
+			"<robot xmlns:xacro=\"http://www.ros.org/wiki/xacro\" name=\"${1:robot_name}\">",
+			"\t<link name=\"${2:/* parent_link */}\"/>\n",
+			"\t<joint name=\"${3:/* joint_name */}\" type=\"${4:/* joint_type */}\">",
+			"\t\t<parent link=\"${2:/* parent_link */}\"/>",
+			"\t\t<child link=\"${5:/* child_link */}\"/>",
+			"\t\t<origin xyz=\"0 0 0\" rpy=\"0 0 0\"/>",
+			"\t\t<axis xyz=\"0 0 0\"/>",
+			"\t</joint>\n",
+			"\t<link name=\"${5:/* child_link */}\"/>",
+			"</robot>\n"
+		],
+		"description": "ROS2 code snippet for urdf xacro"
+	},
+
+	"ROS2 URDF XACRO Include": {
+		"prefix": "ros2_urdf_xacro_include",
+		"body": [
+		  "<xacro:include filename=\"$(find ${1:/* pkg_name */})/urdf/${2:/* file_name */}\"/>$0",
+		],
+		"description": "ROS2 code snippet for urdf xacro include"
+	},
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"outputChannel.js","sourceRoot":"","sources":["../../src/outputChannel.ts"],"names":[],"mappings":";;;AAAA,iCAAiC;AAEjC,IAAI,OAA6B,CAAC;AAElC,SAAgB,gBAAgB;IAC5B,IAAI,CAAC,OAAO,EAAE;QACV,OAAO,GAAG,MAAM,CAAC,MAAM,CAAC,mBAAmB,CAAC,qBAAqB,CAAC,CAAC;KACtE;IACD,OAAO,OAAO,CAAC;AACnB,CAAC;AALD,4CAKC"}

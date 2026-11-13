@@ -1,0 +1,75 @@
+{
+	"name": "vscode-ros2",
+	"displayName": "ROS2",
+	"description": "Software Development Toolset around ROS2 (Robot Operating System 2)",
+	"version": "0.0.9",
+	"publisher": "JaehyunShim",
+	"icon": "media/icon.png",
+	"keywords": [
+		"ros",
+		"ros2",
+		"robot"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/JaehyunShim/vscode-ros2"
+	},
+	"engines": {
+		"vscode": "^1.56.0"
+	},
+	"categories": [
+		"Snippets"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "xml",
+				"extensions": [
+					"launch",
+					"urdf",
+					"xacro",
+					"srdf"
+				]
+			},
+			{
+				"id": "yaml",
+				"extensions": [
+					"rviz",
+					"repos"
+				]
+			}
+		],
+		"snippets": [
+			{
+				"language": "cpp",
+				"path": "./snippets/cpp.json"
+			},
+			{
+				"language": "python",
+				"path": "./snippets/python.json"
+			},
+			{
+				"language": "xml",
+				"path": "./snippets/xml.json"
+			},
+			{
+				"language": "yaml",
+				"path": "./snippets/yaml.json"
+			},
+			{
+				"language": "cmake",
+				"path": "./snippets/cmake.json"
+			}
+		]
+	},
+	"__metadata": {
+		"id": "c1dddd0b-2e82-44ab-b3d5-a1c36a802f86",
+		"publisherId": "ae27eadf-6123-464d-9dce-5ace3d9af5ea",
+		"publisherDisplayName": "JaehyunShim",
+		"targetPlatform": "undefined",
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"installedTimestamp": 1794580849493,
+		"preRelease": false
+	}
+}

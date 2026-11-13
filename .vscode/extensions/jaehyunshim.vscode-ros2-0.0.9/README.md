@@ -1,0 +1,110 @@
+# VSCode ROS2 Extension
+This VSCode ROS2 extension is made to help ROS2 users focus on their code alogirhtms by providing repeating code patterns.
+
+## Features
+- CPP
+  - ros2_main
+  - ros2_class_declare
+  - ros2_class_define
+  - ros2_publisher
+  - ros2_publisher_init
+  - ros2_publisher_publish
+  - ros2_subscriber
+  - ros2_subscriber_callback
+  - ros2_subscriber_init
+  - ros2_client
+  - ros2_client_response_callback
+  - ros2_client_init
+  - ros2_client_wait_for_server
+  - ros2_client_async_send_request
+  - ros2_server
+  - ros2_server_callback
+  - ros2_server_init
+  - ros2_action_client
+  - ros2_action_client_callback
+  - ros2_action_client_init
+  - ros2_action_client_wait_for_action_server
+  - ros2_action_client_async_send_goal
+  - ros2_action_client_async_cancel_all_goals
+  - ros2_action_server
+  - ros2_action_server_callback
+  - ros2_action_server_init
+  - ros2_timer
+  - ros2_timer_callback
+  - ros2_timer_init
+  - ros2_parameter_declare
+  - ros2_parameter_get
+  - ros2_logging_debug
+  - ros2_logging_info
+  - ros2_logging_warn
+  - ros2_logging_error
+  - ros2_logging_fatal
+  - ros2_rate
+  - ros2_copyright
+- Python
+  - ros2_main
+  - ros2_class
+  - ros2_publisher
+  - ros2_publisher_publish
+  - ros2_subscriber
+  - ros2_subscriber_callback
+  - ros2_client
+  - ros2_client_response_callback
+  - ros2_client_wait_for_server
+  - ros2_client_async_send_request
+  - ros2_server
+  - ros2_server_callback
+  - ros2_action_client
+  - ros2_action_client_callback
+  - ros2_action_client_wait_for_action_server
+  - ros2_action_client_async_send_goal
+  - ros2_action_client_async_cancel_all_goals
+  - ros2_action_server
+  - ros2_action_server_callback
+  - ros2_timer
+  - ros2_timer_callback
+  - ros2_parameter_declare
+  - ros2_parameter_get
+  - ros2_logging_debug
+  - ros2_logging_info
+  - ros2_logging_warn
+  - ros2_logging_error
+  - ros2_logging_fatal
+  - ros2_sleep
+  - ros2_install_executable
+  - ros2_install_share
+  - ros2_launch
+  - ros2_launch_argument
+  - ros2_launch_node
+  - ros2_launch_node_with_options
+  - ros2_launch_include
+  - ros2_copyright
+- XML
+  - ros2_launch
+  - ros2_launch_argument
+  - ros2_launch_node
+  - ros2_launch_node_with_options
+  - ros2_launch_include
+  - ros2_urdf
+  - ros2_urdf_link
+  - ros2_urdf_link_with_components
+  - ros2_urdf_joint
+  - ros2_urdf_xacro
+  - ros2_urdf_xacro_include
+- YAML
+  - ros2_parameter
+- CMake
+  - ros2_add_executable
+  - ros2_add_library
+  - ros2_install_executable
+  - ros2_install_library
+  - ros2_install_share
+  - ros2_install_include
+  - ros2_export_include
+  - ros2_export_library
+  - ros2_export_dependency
+
+## Reference
+- https://github.com/ms-iot/vscode-ros
+- https://github.com/pijaro/ros-snippets
+- https://code.visualstudio.com/api/working-with-extensions/publishing-extension

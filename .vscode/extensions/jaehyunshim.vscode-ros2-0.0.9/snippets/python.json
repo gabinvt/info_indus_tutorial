@@ -1,0 +1,467 @@
+{
+	//--------------------------------------------------
+	// ROS2 Main
+	//--------------------------------------------------
+
+	"ROS2 Main": {
+		"prefix": "ros2_main",
+		"body": [
+			"import rclpy\n",
+			"from ${1:/* pkg_name */}.${2:/* file_name */} import ${3:/* ClassName */}\n\n",
+			"def main(args=None):",
+			"\trclpy.init(args=args)",
+			"\trclpy.spin(${3:/* ClassName */}())",
+			"\trclpy.shutdown()\n",
+			"if __name__ == '__main__':",
+			"\tmain()\n$0"
+		],
+		"description": "ROS2 code snippet for main"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Class
+	//--------------------------------------------------
+
+	"ROS2 Class": {
+		"prefix": "ros2_class",
+		"body": [
+			"import rclpy",
+			"from rclpy.node import Node$0\n\n",
+			"class ${1:/* ClassName */}(Node):\n",
+			"\tdef __init__(self):",
+			"\t\tsuper().__init__('${2:/* node_name */}')\n",
+		],
+		"description": "ROS2 code snippet for class"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Publisher
+	//--------------------------------------------------
+
+	"ROS2 Publisher": {
+		"prefix": "ros2_publisher",
+		"body": [
+			"self.${1:/* pub_name */} = self.create_publisher(${2:/* msg_type */}, '${3:/* topic_name */}', 10)$0",
+		],
+		"description": "ROS2 code snippet for publisher"
+	},
+
+	"ROS2 Publisher Publish": {
+		"prefix": "ros2_publisher_publish",
+		"body": [
+			"msg = ${1:/* msg_type */}()",
+			"self.get_logger().info('Publishing message')",
+			"self.${2:/* pub_name */}.publish(msg)$0",
+		],
+		"description": "ROS2 code snippet for publisher publish"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Subscriber
+	//--------------------------------------------------
+
+	"ROS2 Subscriber": {
+		"prefix": "ros2_subscriber",
+		"body": [
+			"self.${1:/* sub_name */} = self.create_subscription(",
+			"\t${2:/* msg_type */}, '${3:/* topic_name */}', self.${4:/* sub_callback_name */}, 10)$0",
+		],
+		"description": "ROS2 code snippet for subscriber"
+	},
+
+	"ROS2 Subscriber Callback": {
+		"prefix": "ros2_subscriber_callback",
+		"body": [
+			"def ${1:/* sub_callback_name */}(self, msg):",
+			"\tself.get_logger().info('Received message')$0",
+		],
+		"description": "ROS2 code snippet for subscriber callback"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Service Client
+	//--------------------------------------------------
+
+	"ROS2 Client": {
+		"prefix": "ros2_client",
+		"body": [
+			"self.${1:/* client_name */} = self.create_client(${2:/* srv_type */}, '${3:/* srv_name */}')$0",
+		],
+		"description": "ROS2 code snippet for client"
+	},
+
+	"ROS2 Client Response Callback": {
+		"prefix": "ros2_client_response_callback",
+		"body": [
+			"def ${1:/* client_response_callback_name */}(self, future):",
+			"\tresponse = self.future.result()",
+			"\tself.get_logger().info('Received response')",
+		],
+		"description": "ROS2 code snippet for client service response callback"
+	},
+
+	"ROS2 Client Wait for Server": {
+		"prefix": "ros2_client_wait_for_server",
+		"body": [
+			"while not self.${1:/* client_name */}.wait_for_service(timeout_sec=1.0):",
+			"\tif not rclpy.ok():",
+			"\t\tself.get_logger().error('Interruped while waiting for the server.')",
+			"\t\treturn",
+			"\telse:",
+			"\t\tself.get_logger().info('Server not available, waiting again...')$0",
+		],
+		"description": "ROS2 code snippet for client wait for server"
+	},
+
+	"ROS2 Client Async Send Request": {
+		"prefix": "ros2_client_async_send_request",
+		"body": [
+			"self.request = ${1:/* srv_type */}.Request()",
+			"self.future = self.${2:/* client_name */}.call_async(self.request)",
+			"self.future.add_done_callback(self.${3:/* client_response_callback_name */})",
+		],
+		"description": "ROS2 code snippet for client async send request"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Service Server
+	//--------------------------------------------------
+
+	"ROS2 Server": {
+		"prefix": "ros2_server",
+		"body": [
+			"self.${1:/* server_name */} = self.create_service(${2:/* srv_type */}, '${3:/* srv_name */}', self.${4:/* server_callback_name */})",
+		],
+		"description": "ROS2 code snippet for server"
+	},
+
+	"ROS2 Server Callback": {
+		"prefix": "ros2_server_callback",
+		"body": [
+			"def ${1:/* server_callback_name */}(self, request, response):",
+      "\tself.get_logger().info('Received request')",
+			"\treturn response$0",
+		],
+		"description": "ROS2 code snippet for server callback"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Action Client
+	//--------------------------------------------------
+
+	"ROS2 Action Client": {
+		"prefix": "ros2_action_client",
+		"body": [
+			"self.${1:/* action_client_name */} = rclpy.action.ActionClient(self, ${2:/* action_type */}, '${3:/* action_name */}')"
+		],
+		"description": "ROS2 code snippet for action client"
+	},
+
+	"ROS2 Action Client Callback": {
+		"prefix": "ros2_action_client_callback",
+		"body": [
+			"def goal_response_callback(self, future):",
+			"\tgoal_handle = future.result()",
+			"\tif not goal_handle.accepted:",
+			"\t\tself.get_logger().info('Goal rejected by server')",
+			"\t\treturn",
+			"\telse:",
+			"\t\tself.get_logger().info('Goal accepted by server, waiting for result')\n",
+
+			"\tself._get_result_future = goal_handle.get_result_async()",
+			"\tself._get_result_future.add_done_callback(self.result_callback)\n",
+
+			"def feedback_callback(self, feedback_msg):",
+			"\tfeedback = feedback_msg.feedback",
+			"\tself.get_logger().info('Received feedback')\n",
+
+			"def result_callback(self, future):",
+			"\tresult = future.result().result",
+			"\tself.get_logger().info('Server successfully executed goal')$0",
+		],
+		"description": "ROS2 code snippet for action client response, feedback and result callbacks"
+	},
+
+	"ROS2 Action Client Wait for Action Server": {
+		"prefix": "ros2_action_client_wait_for_action_server",
+		"body": [
+			"self.${1:/* action_client_name */}.wait_for_server()$0",
+		],
+		"description": "ROS2 code snippet for action client wait for action server"
+	},
+
+	"ROS2 Action Client Async Send Goal": {
+		"prefix": "ros2_action_client_async_send_goal",
+		"body": [
+			"goal = ${1:/* action_type */}.Goal()",
+			"self.send_goal_future = self.${1:/* action_client_name */}.send_goal_async(",
+			"\tgoal, feedback_callback=self.feedback_callback)",
+			"self.send_goal_future.add_done_callback(self.goal_response_callback)$0",
+		],
+		"description": "ROS2 code snippet for client async send request"
+	},
+
+	// Does not work yet!
+	// "ROS2 Action Client Async Cancel All Goals": {
+	// 	"prefix": "ros2_action_client_async_cancel_all_goals",
+	// 	"body": [
+	// 		"self.${1:/* action_client_name */}.cancel_goal_async()$0",
+	// 	],
+	// 	"description": "ROS2 code snippet for action client wait for action server"
+	// },
+
+	//--------------------------------------------------
+	// ROS2 Action Server
+	//--------------------------------------------------
+
+	"ROS2 Action Server": {
+		"prefix": "ros2_action_server",
+		"body": [
+			"self.${1:/* action_server_name */} = rclpy.action.ActionServer(",
+      "\tself, ${2:/* action_type */}, '${3:/* action_name */}',",
+      "\t# callback_group=ReentrantCallbackGroup(),",
+      "\tgoal_callback=self.goal_callback,",
+      "\tcancel_callback=self.cancel_callback,",
+      "\texecute_callback=self.execute_callback)",
+		],
+		"description": "ROS2 code snippet for action server"
+	},
+
+	"ROS2 Action Server Callback": {
+		"prefix": "ros2_action_server_callback",
+		"body": [
+			"from rclpy.action import GoalResponse, CancelResponse"
+			"def goal_callback(self, goal_request):",
+			"\tself.get_logger().info('Received goal request')",
+			"\treturn GoalResponse.ACCEPT\n",
+			"def cancel_callback(self, goal_handle):",
+			"\tself.get_logger().info('Received cancel request')",
+			"\treturn CancelResponse.ACCEPT\n",
+			"def execute_callback(self, goal_handle):",
+			"\tself.get_logger().info('Executing goal')",
+			"\tgoal = goal_handle.request",
+			"\tfeedback = ${1:/* action_type */}.Feedback()",
+			"\tresult = ${1:/* action_type */}.Result()\n",
+			"\timport time",
+			"\tfor i in range(0, 10):",
+			"\t\tif goal_handle.is_cancel_requested:",
+			"\t\t\t# goal_handle.canceled()",
+			"\t\t\tself.get_logger().error('Goal Canceled')",
+			"\t\t\treturn\n",
+			"\t\tgoal_handle.publish_feedback(feedback)",
+			"\t\tself.get_logger().info('Sent feedback')",
+			"\t\ttime.sleep(1)\n",
+			"\tgoal_handle.succeed()",
+			"\tself.get_logger().info('Successfully executed goal')",
+			"\treturn result$0",
+		],
+		"description": "ROS2 code snippet for action server callback"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Timer
+	//--------------------------------------------------
+
+	"ROS2 Timer": {
+		"prefix": "ros2_timer",
+		"body": [
+			"self.${1:/* timer_name */} = self.create_timer(1.0, self.${2:/* timer_callback_name */})$0",
+		],
+		"description": "ROS2 code snippet for timer"
+	},
+
+	"ROS2 Timer Callback": {
+		"prefix": "ros2_timer_callback",
+		"body": [
+			"def ${1:/* timer_callback_name */}(self):",
+      "\tself.get_logger().info('Timer event')$0",
+		],
+		"description": "ROS2 code snippet for timer callback"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Parameter
+	//--------------------------------------------------
+
+	"ROS2 Parameter Declare": {
+		"prefix": "ros2_parameter_declare",
+		"body": [
+			"self.declare_parameter('${1:/* param_name */}', ${2:/* default_value */})",
+		],
+		"description": "ROS2 code snippet for declaring parameter"
+	},
+
+	"ROS2 Parameter Get": {
+		"prefix": "ros2_parameter_get",
+		"body": [
+			"self.${1:/* param_name */} = self.get_parameter('${1:/* param_name */}').get_parameter_value().${2:/* param_type */}",
+		],
+		"description": "ROS2 code snippet for getting parameter"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Logging Macro
+	//--------------------------------------------------
+
+	"ROS2 Logging Debug": {
+		"prefix": "ros2_logging_debug",
+		"body": [
+			"self.get_logger().debug('${1:/* log */}')",
+		],
+		"description": "ROS2 code snippet for debug logging macro"
+	},
+
+	"ROS2 Logging Info": {
+		"prefix": "ros2_logging_info",
+		"body": [
+			"self.get_logger().info('${1:/* log */}')",
+		],
+		"description": "ROS2 code snippet for info logging macro"
+	},
+
+	"ROS2 Logging Warn": {
+		"prefix": "ros2_logging_warn",
+		"body": [
+			"self.get_logger().warn('${1:/* log */}')",
+		],
+		"description": "ROS2 code snippet for warn logging macro"
+	},
+
+	"ROS2 Logging Error": {
+		"prefix": "ros2_logging_error",
+		"body": [
+			"self.get_logger().error('${1:/* log */}')",
+		],
+		"description": "ROS2 code snippet for error logging macro"
+	},
+
+	"ROS2 Logging Fatal": {
+		"prefix": "ros2_logging_fatal",
+		"body": [
+			"self.get_logger().fatal('${1:/* log */}')",
+		],
+		"description": "ROS2 code snippet for fatal logging macro"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Sleep # To be replaced with rclpy Rate
+	//--------------------------------------------------
+
+	"ROS2 Sleep": {
+		"prefix": "ros2_sleep",
+		"body": [
+			"import time",
+			"time.sleep(${1:/* period */})$0",
+		],
+		"description": "ROS2 code snippet for sleep"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Setup Py
+	//--------------------------------------------------
+
+	"ROS2 Install Executable": {
+		"prefix": "ros2_install_executable",
+		"body": [
+			"'${1:/* exec_name */} = ${2:/* pkg_name */}.${3:/* file_name */}:main',$0",
+		],
+		"description": "ROS2 code snippet for install executable"
+	},
+
+	"ROS2 Install Share": {
+		"prefix": "ros2_install_share",
+		"body": [
+			"(os.path.join('share', package_name), glob('${1:/* dir_name */}/*')),$0",
+		],
+		"description": "ROS2 code snippet for install share"
+	},
+
+	//--------------------------------------------------
+	// ROS2 Launch Python
+	//--------------------------------------------------
+
+	"ROS2 Launch": {
+		"prefix": "ros2_launch",
+		"body": [
+			"import os\n",
+			"from ament_index_python.packages import get_package_share_directory",
+			"from launch import LaunchDescription",
+			"from launch.actions import DeclareLaunchArgument",
+			"from launch.actions import IncludeLaunchDescription",
+			"from launch.launch_description_sources import PythonLaunchDescriptionSource",
+			"from launch.substitutions import LaunchConfiguration",
+			"from launch_ros.actions import Node\n\n",
+			"def generate_launch_description():",
+			"\treturn LaunchDescription([",
+			"\t\tNode(",
+			"\t\t\tpackage='${1:/* pkg_name */}',",
+			"\t\t\texecutable='${2:/* exec_name */}',",
+			"\t\t\tname='${3:/* node_name */}',",
+			"\t\t\toutput='screen'),",
+			"\t])\n$0",
+		],
+		"description": "ROS2 code snippet for launch"
+	},
+
+	"ROS2 Launch Argument": {
+		"prefix": "ros2_launch_argument",
+		"body": [
+			"DeclareLaunchArgument('${1:/* arg_name */}', default_value='${2:/* default_value */}'),",
+			"# LaunchConfiguration('${1:/* arg_name */}')",
+		],
+		"description": "ROS2 code snippet for launch argument"
+	},
+
+	"ROS2 Launch Node": {
+		"prefix": "ros2_launch_node",
+		"body": [
+			"Node(",
+			"\tpackage='${1:/* pkg_name */}',",
+			"\texecutable='${2:/* exec_name */}',",
+			"\tname='${3:/* node_name */}',",
+			"\toutput='screen'),$0",
+		],
+		"description": "ROS2 code snippet for launch node"
+	},
+
+	"ROS2 Launch Node with Options": {
+		"prefix": "ros2_launch_node_with_options",
+		"body": [
+			"Node(",
+			"\tpackage='${1:/* pkg_name */}',",
+			"\texecutable='${2:/* exec_name */}',",
+			"\tname='${3:/* node_name */}',",
+			"\tremappings=[('${4:/* old_topic_name */}', '${5:/* new_topic_name */}')],",
+			"\tparameters=[{'${6:/* param_name */}': ${7:/* param_value */}}],",
+			"\tparameters=[os.path.join(get_package_share_directory('${8:/* param_pkg_name */}'),",
+			"\t\t'config', '${9:/* file_name */}')],",
+			"\toutput='screen'),$0",
+		],
+		"description": "ROS2 code snippet for launch node with options"
+	},
+
+	"ROS2 Launch Include": {
+		"prefix": "ros2_launch_include",
+		"body": [
+			"IncludeLaunchDescription(",
+			"\tPythonLaunchDescriptionSource(",
+			"\t\tos.path.join(get_package_share_directory('${1:/* launch_pkg_name */}'),",
+			"\t\t'launch', '${2:/* file_name */}'))),",
+		],
+		"description": "ROS2 code snippet for launch include"
+	},
+
+  //--------------------------------------------------
+	// ROS2 Copyright
+	//--------------------------------------------------
+
+	"ROS2 Copyright": {
+		"prefix": "ros2_copyright",
+		"body": [
+			"# Copyright ${1:/* Year */} ${2:/* Name */}",
+      "#",
+      "# ${3:/* LICENSE (Checkout: https://github.com/ament/ament_lint/tree/master/ament_copyright/test/cases) */}$0",
+		],
+		"description": "ROS2 code snippet for copyright"
+	},
+}

@@ -1,0 +1,15 @@
+{
+	//--------------------------------------------------
+	// ROS2 Parameter YAML
+	//--------------------------------------------------
+
+	"ROS2 Parameter": {
+		"prefix": "ros2_parameter",
+		"body": [
+			"${1:/* node_name */}:",
+			"\tros__parameters:",
+			"\t\t${2:/* param_name */}: ${3:/* param_value */}",
+		],
+		"description": "ROS2 code snippet for parameter"
+	},
+}

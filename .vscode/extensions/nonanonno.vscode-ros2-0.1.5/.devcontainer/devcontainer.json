@@ -1,0 +1,29 @@
+{
+  "dockerFile": "Dockerfile",
+  "build": {
+    "args": {
+      "ros_distro": "foxy"
+    }
+  },
+  "remoteUser": "vscode",
+  "runArgs": [
+    "--net",
+    "host",
+    "-e",
+    "DISPLAY=${env:DISPLAY}",
+    "-v",
+    "/tmp/.X11-nix:/tmp/.X11-unix"
+  ],
+  "extensions": [
+    "wraith13.background-phi-colors",
+    "streetsidesoftware.code-spell-checker",
+    "eamodio.gitlens",
+    "yzhang.markdown-all-in-one",
+    "twxs.cmake",
+    "jebbs.plantuml",
+    "mhutchie.git-graph",
+    "donjayamanne.githistory",
+    "EditorConfig.EditorConfig",
+    "esbenp.prettier-vscode"
+  ]
+}
